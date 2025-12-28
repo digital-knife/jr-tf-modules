@@ -13,7 +13,7 @@ variable "project_name" {
 variable "environment" {
   description = "The deployment environment (e.g., dev, staging, prod)"
   type        = string
-  default     = "management"
+  default     = "automation"
 }
 
 variable "automation_account_email" {

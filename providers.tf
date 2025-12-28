@@ -7,7 +7,11 @@ terraform {
     region         = "us-east-1"
     dynamodb_table = "jr-tf-state-locks"
     encrypt        = true
-    role_arn       = "arn:aws:iam::756148349252:role/CrossAccountTerraformStateRole"
+
+    # This role allows Terraform to reach the S3 Bucket/DynamoDB in the Hub (bootstrap account)
+    # assume_role = {
+    #   role_arn = "arn:aws:iam::756148349252:role/CrossAccountTerraformStateRole"
+    # }
   }
 
   required_providers {
@@ -21,7 +25,13 @@ terraform {
 # 1. Main Automation Account (The Hub)
 provider "aws" {
   region  = var.aws_region
-  profile = "automation-hub"
+  profile = "automation-provisioner"
+
+  # Professional standard: Use the provisioner role for actual work
+  # assume_role {
+  #   role_arn     = "arn:aws:iam::756148349252:role/automation-provisioner"
+  #   session_name = "TerraformProvisioning"
+  # }
 
   default_tags {
     tags = local.common_tags
@@ -29,7 +39,7 @@ provider "aws" {
 }
 
 # 2. ALIAS: Management Account (The Root)
-# Used ONLY for Organization-level tasks.
+# Used ONLY for Organization-level tasks or creating the Test Account.
 provider "aws" {
   alias   = "management"
   region  = var.aws_region
@@ -37,4 +47,3 @@ provider "aws" {
 
   allowed_account_ids = ["181651592207"]
 }
-
