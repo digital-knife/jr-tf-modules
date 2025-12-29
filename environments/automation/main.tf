@@ -16,7 +16,7 @@ locals {
 }
 
 module "automation_assets" {
-  source = "./modules/s3_bucket"
+  source = "../../modules/s3_bucket"
 
   # Using your existing local to ensure global uniqueness
   bucket_name   = "jr-automation-assets-${local.account_id}"
