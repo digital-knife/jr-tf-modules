@@ -26,7 +26,8 @@ Built with best practices: input validation, tagging, least-privilege security, 
 - **IaC**: Terraform (0.15+ compatible, modules, validation, locals)  
 - **Cloud**: AWS (S3, VPC, EC2, IAM, Lambda, CloudWatch, Auto Scaling Groups)  
 
-### Example Usage (S3 Module with repo locally available)
+### Example Usage (S3 Module)
+#Local Usage
 ```hcl
 module "secure_bucket" {
   source        = "./terraform-aws-s3-secure-bucket"
@@ -38,8 +39,7 @@ module "secure_bucket" {
   force_destroy = false
 }
 
-### Alternate Usage with HTTPS
-```hcl
+#Alternate Usage with HTTPS
 module "automation_assets" {
   # Format: git::https://github.com/USERNAME/REPO.git//PATH_TO_MODULE?ref=BRANCH_OR_TAG
   source = "git::https://github.com/digital-knife/jr-tf-modules.git//modules/s3_bucket?ref=main"
