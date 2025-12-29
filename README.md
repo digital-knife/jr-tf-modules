@@ -27,8 +27,9 @@ Built with best practices: input validation, tagging, least-privilege security, 
 - **Cloud**: AWS (S3, VPC, EC2, IAM, Lambda, CloudWatch, Auto Scaling Groups)  
 
 ### Example Usage (S3 Module)
-# --- Local Usage (Standard) ---
-# Use this when calling the module from within this repository
+### --- Local Usage (Standard) ---
+### Use this when calling the module from within this repository
+```hcl
 module "secure_bucket" {
   source      = "../../modules/s3_bucket"
   bucket_name = "my-unique-bucket-name-2025"
@@ -39,9 +40,11 @@ module "secure_bucket" {
   }
   force_destroy = false
 }
+```
 
-# --- Alternate Usage (Remote/HTTPS) ---
-# Use this to reference the module from a different project/machine
+### --- Alternate Usage (Remote/HTTPS) ---
+### Use this to reference the module from a different project/machine
+```hcl
 module "automation_assets" {
   # The double slash // is mandatory to point to the sub-folder in the repo
   source = "git::https://github.com/digital-knife/jr-tf-modules.git//modules/s3_bucket?ref=main"
@@ -50,3 +53,4 @@ module "automation_assets" {
   force_destroy = true
   tags          = local.common_tags
 }
+```
