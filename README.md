@@ -27,21 +27,23 @@ Built with best practices: input validation, tagging, least-privilege security, 
 - **Cloud**: AWS (S3, VPC, EC2, IAM, Lambda, CloudWatch, Auto Scaling Groups)  
 
 ### Example Usage (S3 Module)
-#Local Usage
-```hcl
+# --- Local Usage (Standard) ---
+# Use this when calling the module from within this repository
 module "secure_bucket" {
-  source        = "./terraform-aws-s3-secure-bucket"
-  bucket_name   = "my-unique-bucket-name-2025"
-  tags          = {
+  source      = "../../modules/s3_bucket"
+  bucket_name = "my-unique-bucket-name-2025"
+  
+  tags = {
     Environment = "prod"
     Owner       = "jermaine"
   }
   force_destroy = false
 }
 
-#Alternate Usage with HTTPS
+# --- Alternate Usage (Remote/HTTPS) ---
+# Use this to reference the module from a different project/machine
 module "automation_assets" {
-  # Format: git::https://github.com/USERNAME/REPO.git//PATH_TO_MODULE?ref=BRANCH_OR_TAG
+  # The double slash // is mandatory to point to the sub-folder in the repo
   source = "git::https://github.com/digital-knife/jr-tf-modules.git//modules/s3_bucket?ref=main"
 
   bucket_name   = "jr-automation-assets-${local.account_id}"
