@@ -27,7 +27,7 @@ provider "aws" {
   region  = var.aws_region
   profile = "automation-provisioner"
 
-  # Professional standard: Use the provisioner role for actual work
+  # Use the provisioner role for actual work
   # assume_role {
   #   role_arn     = "arn:aws:iam::756148349252:role/automation-provisioner"
   #   session_name = "TerraformProvisioning"
@@ -38,8 +38,7 @@ provider "aws" {
   }
 }
 
-# 2. ALIAS: Management Account (The Root)
-# Used ONLY for Organization-level tasks or creating the Test Account.
+# 2.Management Account ONLY for Organization-level tasks or creating the Test Account.
 provider "aws" {
   alias   = "management"
   region  = var.aws_region

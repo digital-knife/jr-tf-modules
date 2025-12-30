@@ -23,8 +23,12 @@ terraform {
 provider "aws" {
   region = "us-east-1"
   # Use the profile you just added for the Test Account (315735600075)
-  profile = "test-automation-provisioner"
-
+  profile = "automation-provisioner"
+  assume_role {
+    # This role was automatically created by AWS Organizations
+    role_arn     = "arn:aws:iam::315735600075:role/OrganizationAccountAccessRole"
+    session_name = "TerraformTestDeployment"
+  }
   default_tags {
     tags = {
       Project     = "jr-cloud-ops"
