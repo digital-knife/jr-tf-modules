@@ -49,11 +49,13 @@ resource "aws_iam_instance_profile" "this" {
 
 # 3. The EC2 Instance
 resource "aws_instance" "this" {
-  ami                    = data.aws_ami.amazon_linux_2023.id
-  instance_type          = var.instance_type
-  subnet_id              = var.subnet_id
-  vpc_security_group_ids = var.security_group_ids
-  iam_instance_profile   = aws_iam_instance_profile.this.name
+  ami                         = data.aws_ami.amazon_linux_2023.id
+  user_data                   = file("${path.module}/scripts/install_nginx.sh")
+  user_data_replace_on_change = true
+  instance_type               = var.instance_type
+  subnet_id                   = var.subnet_id
+  vpc_security_group_ids      = var.security_group_ids
+  iam_instance_profile        = aws_iam_instance_profile.this.name
 
   # Security Best Practice: Enforce IMDSv2 (prevents credential theft)
   metadata_options {

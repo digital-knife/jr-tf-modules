@@ -1,9 +1,31 @@
-# Local .terraform directories
+# ==============================================================================
+# TERRAFORM / TERRAGRUNT DEFAULTS
+# ==============================================================================
+
+# Local .terraform directories (recursive)
 **/.terraform/*
 
+# Terragrunt cache directories (recursive)
+# This is where Terragrunt downloads modules; it can be gigabytes of data.
+**/.terragrunt-cache/*
+
+# Generated files
+# Since we use 'generate' blocks, these files are transient and should not be tracked.
+backend.tf
+provider.tf
+
 # .tfstate files
+# Even though we use remote state, local backups can appear during migrations.
 *.tfstate
 *.tfstate.*
+
+# Terraform plan files
+# These are binary files and often contain sensitive data.
+*.tfplan
+
+# ==============================================================================
+# LOGS AND SENSITIVE FILES
+# ==============================================================================
 
 # Crash logs
 crash.log
@@ -33,11 +55,16 @@ id_rsa*
 .env
 .envrc
 
-# OS Specific Files
+# ==============================================================================
+# OS / IDE SPECIFIC
+# ==============================================================================
+
 .DS_Store
 Thumbs.db
 *.swp
 *~
+.idea/
+.vscode/
 
 # Log files
 *.log

@@ -53,8 +53,8 @@ resource "aws_lb_listener" "http" {
 
 # 4. Target Attachments
 resource "aws_lb_target_group_attachment" "this" {
-  for_each         = toset(var.target_ids)
+  for_each         = var.target_instances
   target_group_arn = aws_lb_target_group.this.arn
-  target_id        = each.value
-  port             = var.target_group_port
+  target_id        = each.value.instance_id
+  port             = 80
 }

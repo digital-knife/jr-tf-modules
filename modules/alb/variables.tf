@@ -76,8 +76,9 @@ variable "listener_protocol" {
 
 # --- Target Management ---
 
-variable "target_ids" {
-  type        = list(string)
+variable "target_instances" {
+  type        = any
   description = "List of EC2 Instance IDs to attach to the Target Group"
-  default     = []
+  default     = {}
 }
+

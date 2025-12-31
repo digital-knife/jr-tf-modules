@@ -10,13 +10,36 @@ resource "aws_security_group" "this" {
   }
 }
 
-# Industry Standard: Explicit, Standalone Outbound Rule
-resource "aws_security_group_rule" "allow_all_egress" {
-  description       = "Allow all outbound traffic"
-  type              = "egress"
-  from_port         = 0
-  to_port           = 0
-  protocol          = "-1" # All protocols
-  cidr_blocks       = ["0.0.0.0/0"]
+# --- Outbound Rules ---
+resource "aws_vpc_security_group_egress_rule" "allow_all_egress" {
   security_group_id = aws_security_group.this.id
+  description       = "Allow all outbound traffic"
+  cidr_ipv4         = "0.0.0.0/0"
+  ip_protocol       = "-1" # All protocols
+}
+
+# --- Inbound Rules (Dynamic based on variables) ---
+
+# This handles the ALB (Internet -> SG)
+resource "aws_vpc_security_group_ingress_rule" "public_http" {
+  for_each = var.public_ingress_port != null ? toset([tostring(var.public_ingress_port)]) : toset([])
+
+  security_group_id = aws_security_group.this.id
+  cidr_ipv4         = "0.0.0.0/0"
+  from_port         = var.public_ingress_port
+  to_port           = var.public_ingress_port
+  ip_protocol       = "tcp"
+  description       = "Allow public HTTP traffic"
+}
+
+# This handles the Handshake (ALB SG -> App SG)
+resource "aws_vpc_security_group_ingress_rule" "app_from_source_sg" {
+  count = var.create_handshake_rule ? 1 : 0
+
+  security_group_id            = aws_security_group.this.id
+  referenced_security_group_id = var.source_security_group_id
+  from_port                    = 80
+  to_port                      = 80
+  ip_protocol                  = "tcp"
+  description                  = "Allow traffic from source security group"
 }

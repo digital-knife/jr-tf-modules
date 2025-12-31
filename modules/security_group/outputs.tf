@@ -15,5 +15,5 @@ output "security_group_name" {
 
 output "egress_rule_id" {
   description = "The ID of the egress rule allowing all outbound traffic"
-  value       = aws_security_group_rule.allow_all_egress.id
+  value       = aws_vpc_security_group_egress_rule.allow_all_egress.id
 }
