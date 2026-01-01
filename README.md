@@ -9,18 +9,40 @@ Built with best practices: input validation, automated tagging, remote state loc
 - **Remote State**: S3 backend with DynamoDB state locking enabled.
 - **Global Config**: Centralized variables via `_global/common_vars.yaml` for account-wide governance.
 
-**Core Infrastructure**
+### Current Modules
 
-- **terraform-aws-s3-secure-bucket**: Production-grade S3 with versioning, encryption, and public access blocks.
-- **terraform-aws-vpc**: Multi-AZ network with public/private subnets and NAT Gateways.
-- **terraform-aws-dynamodb**: Encrypted tables for application data and Terraform state locking.
+### Current Modules
+
+**Core Infrastructure**
+- **S3 Secure Bucket**: High-security storage with versioning, encryption, and full 
+  public access blocking. Implements strict naming validation and lifecycle 
+  rules for production-grade data safety.
+- **VPC**: Multi-AZ network architecture featuring public and private subnet 
+  segmentation. Includes integrated NAT Gateways and Flow Logs for secure, 
+  audited traffic management.
+- **DynamoDB**: Scalable NoSQL tables featuring enterprise encryption and 
+  high availability. Configured specifically for application data and 
+  secure Terraform state locking.
+- **EC2 Compute**: Hardened baseline instances featuring custom AMIs and 
+  automated user-data scripts for software provisioning. Includes SSM 
+  integration for secure, passwordless session management.
+- **Application Load Balancer**: High-availability traffic distribution across 
+  multiple availability zones with integrated health checks. Manages SSL 
+  termination and intelligent routing to back-end target groups.
 
 **Coming Soon**
-
-- **Compute**: EC2 Baseline (SSM-enabled), Auto Scaling Groups (ASG), and Application Load Balancers (ALB).
-- **Security & Identity**: Scoped IAM Roles, OIDC for GitHub Actions, and KMS Encryption.
-- **Database & Serverless**: Managed RDS (Multi-AZ) and Lambda (VPC-integrated).
-- **Monitoring**: Centralized CloudWatch Dashboards and SNS Operational Alarms.
+- **IAM Governance**: Centralized identity management featuring scoped 
+  execution roles and least-privilege policies. Implements OIDC providers 
+  to enable secure authentication for GitHub Actions.
+- **RDS Database**: Managed relational databases with Multi-AZ failover and 
+  automated backup retention policies. Includes encrypted storage and 
+  integrated security groups for private network isolation.
+- **Lambda Serverless**: Event-driven functions with scoped IAM execution 
+  roles and private VPC connectivity. Configured for automated 
+  infrastructure tasks and cost-efficient backend logic.
+- **CloudWatch & Monitoring**: Centralized operational dashboards featuring 
+  real-time metric filters and automated SNS alarms. Provides full 
+  visibility into resource health across all environments.
 
 ### Tech Stack
 
