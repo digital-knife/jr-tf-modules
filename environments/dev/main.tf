@@ -26,7 +26,6 @@ module "network" {
 }
 
 # --- 2. Security Layer ---
-
 # ALB Security Group: Open to the public on Port 80
 module "alb_sg" {
   source              = "../../modules/security_group"
