@@ -3,15 +3,13 @@
 Reusable **Terraform** modules and **Terragrunt** orchestrations for secure, production-grade AWS infrastructure. 
 Built with best practices: input validation, automated tagging, remote state locking, and modular design.
 
-### Orchestration & Structure
+## Orchestration & Structure
 
 - **Terragrunt**: Manages environment isolation (dev, automation) and keeps code DRY.
 - **Remote State**: S3 backend with DynamoDB state locking enabled.
 - **Global Config**: Centralized variables via `_global/common_vars.yaml` for account-wide governance.
 
-### Current Modules
-
-### Current Modules
+## Current Modules
 
 **Core Infrastructure**
 - **S3 Secure Bucket**: High-security storage with versioning, encryption, and full 
@@ -34,7 +32,7 @@ Built with best practices: input validation, automated tagging, remote state loc
   multiple availability zones with integrated health checks. Manages SSL 
   termination and intelligent routing to back-end target groups.
 
-**Coming Soon**
+##**Coming Soon**
 - **IAM Governance**: Centralized identity management featuring scoped 
   execution roles and least-privilege policies. Implements OIDC providers 
   to enable secure authentication for GitHub Actions.
@@ -51,13 +49,13 @@ Built with best practices: input validation, automated tagging, remote state loc
   real-time metric filters and automated SNS alarms. Provides full 
   visibility into resource health across all environments.
 
-### Tech Stack
+## Tech Stack
 
 - **Orchestration**: Terragrunt
 - **IaC**: Terraform 1.x (Modules, Validation, Lifecycle Hooks)
 - **Cloud**: AWS (Full Stack)
 
-### --- Deploying an Environment ---
+## --- Deploying an Environment ---
 
 ```hcl
 git clone https://github.com/digital-knife/jr-tf-modules.git
