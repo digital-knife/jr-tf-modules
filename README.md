@@ -1,53 +1,50 @@
 # AWS Infrastructure Modules
 
-Reusable **Terraform** modules for secure, production-grade AWS infrastructure.  
-Built with best practices: input validation, tagging, least-privilege security, and modular design.
+Reusable **Terraform** modules and **Terragrunt** orchestrations for secure, production-grade AWS infrastructure. 
+Built with best practices: input validation, automated tagging, remote state locking, and modular design.
+
+### Orchestration & Structure
+- **Terragrunt**: Manages environment isolation (dev, automation) and keeps code DRY.
+- **Remote State**: S3 backend with DynamoDB state locking enabled.
+- **Global Config**: Centralized variables via `_global/common_vars.yaml` for account-wide governance.
 
 ### Current Modules
+**Core Networking & Security**
+- **terraform-aws-vpc**: Multi-AZ VPC with public/private subnet segmentation, NAT Gateways, and Flow Logs.
+- **terraform-aws-security-group**: Standardized SG templates with strict ingress/egress rule validation.
+- **terraform-aws-iam**: Scoped IAM roles, instance profiles, and OpenID Connect (OIDC) for GitHub Actions.
 
-- **terraform-aws-s3-secure-bucket**  
-  Secure S3 bucket module with:  
-  - Strict bucket naming validation (lowercase, numbers, dots, hyphens only)  
-  - Versioning enabled  
-  - Server-side encryption (AES256)  
-  - Public access fully blocked  
-  - Optional force_destroy safety default  
+**Compute & Storage**
+- **terraform-aws-s3-secure-bucket**: Secure S3 module with versioning, AES256 encryption, and Public Access Block.
+- **terraform-aws-ec2-baseline**: Hardened EC2 instances with custom AMIs and integration with SSM for session management.
+- **terraform-aws-autoscaling**: ASG configurations with health checks and Application Load Balancer (ALB) attachment.
 
-- **terraform-aws-vpc** *(in progress)*  
-  Modular VPC with public/private subnets, NAT, flow logs, and security groups.
+**Database & Serverless**
+- **terraform-aws-rds**: Managed Relational Database Service with Multi-AZ, automated backups, and encryption.
+- **terraform-aws-dynamodb**: Encrypted tables for application data and Terraform state locking.
+- **terraform-aws-lambda**: Serverless functions with scoped IAM execution roles and VPC connectivity.
 
-- **terraform-aws-ec2-baseline** *(planned)*  
-  EC2 instances with custom AMIs, security groups, and integration with Auto Scaling.
-
-- **terraform-aws-lambda** *(planned)*  
-  Serverless functions with proper IAM roles, VPC attachment, and CloudWatch alarms.
+**Operations & Monitoring**
+- **terraform-aws-cloudwatch**: Centralized logging, metric filters, and SNS-backed operational alarms.
+- **terraform-aws-kms**: Customer Managed Keys (CMK) for enterprise-wide data encryption.
 
 ### Tech Stack
-- **IaC**: Terraform (0.15+ compatible, modules, validation, locals)  
-- **Cloud**: AWS (S3, VPC, EC2, IAM, Lambda, CloudWatch, Auto Scaling Groups)  
-
-### Example Usage (S3 Module)
-### --- Local Usage (Standard) ---
-### Use this when calling the module from within this repository
+- **Orchestration**: Terragrunt
+- **IaC**: Terraform 1.x (Modules, Validation, Lifecycle Hooks)
+- **Cloud**: AWS (Full Stack)
+### Example Usage (Terragrunt)
+### --- Deploying an Environment ---
 ```hcl
-module "secure_bucket" {
-  source      = "../../modules/s3_bucket"
-  bucket_name = "my-unique-bucket-name-2025"
-  
-  tags = {
-    Environment = "prod"
-    Owner       = "jermaine"
-  }
-  force_destroy = false
-}
+cd environments/dev/vpc
+terragrunt plan
+terragrunt apply
 ```
 
-### --- Alternate Usage (Remote/HTTPS) ---
-### Use this to reference the module from a different project/machine
+### --- Remote Module Usage (HTTPS) ---
 ```hcl
 module "automation_assets" {
   # The double slash // is mandatory to point to the sub-folder in the repo
-  source = "git::https://github.com/digital-knife/jr-tf-modules.git//modules/s3_bucket?ref=main"
+  source = "git::[https://github.com/digital-knife/jr-tf-modules.git//modules/s3_bucket?ref=main](https://github.com/digital-knife/jr-tf-modules.git//modules/s3_bucket?ref=main)"
 
   bucket_name   = "jr-automation-assets-${local.account_id}"
   force_destroy = true
