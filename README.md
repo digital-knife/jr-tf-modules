@@ -32,7 +32,7 @@ Built with best practices: input validation, automated tagging, remote state loc
   multiple availability zones with integrated health checks. Manages SSL 
   termination and intelligent routing to back-end target groups.
 
-##**Coming Soon**
+## Coming Soon
 - **IAM Governance**: Centralized identity management featuring scoped 
   execution roles and least-privilege policies. Implements OIDC providers 
   to enable secure authentication for GitHub Actions.
