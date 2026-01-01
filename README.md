@@ -31,6 +31,7 @@ Built with best practices: input validation, automated tagging, remote state loc
 ### --- Deploying an Environment ---
 
 ```hcl
+git clone https://github.com/digital-knife/jr-tf-modules.git
 cd environments/dev/vpc
 terragrunt plan
 terragrunt apply
