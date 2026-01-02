@@ -32,18 +32,15 @@ Built with best practices: input validation, automated tagging, remote state loc
   multiple availability zones with integrated health checks. Manages SSL 
   termination and intelligent routing to back-end target groups.
 
+- **CI/CD via GitHub Actions & GitOps**: Automated deployment pipeline utilizing OIDC 
+  for secure, keyless authentication to AWS. Implements automated 'terragrunt run-all plan' 
+  on pull requests and 'apply' on merges to the main branch, ensuring an immutable audit 
+  trail for all infrastructure changes.
+
 ## Coming Soon
 - **IAM Governance**: Centralized identity management featuring scoped 
   execution roles and least-privilege policies. Implements OIDC providers 
   to enable secure authentication for GitHub Actions.
-
-- **RDS Database**: Managed relational databases with Multi-AZ failover and 
-  automated backup retention policies. Includes encrypted storage and 
-  integrated security groups for private network isolation.
-
-- **Lambda Serverless**: Event-driven functions with scoped IAM execution 
-  roles and private VPC connectivity. Configured for automated 
-  infrastructure tasks and cost-efficient backend logic.
 
 - **CloudWatch & Monitoring**: Centralized operational dashboards featuring 
   real-time metric filters and automated SNS alarms. Provides full 
@@ -54,6 +51,7 @@ Built with best practices: input validation, automated tagging, remote state loc
 - **Orchestration**: Terragrunt
 - **IaC**: Terraform 1.x (Modules, Validation, Lifecycle Hooks)
 - **Cloud**: AWS (Full Stack)
+- **GitHub Actions**: Orchestration engine for CI/CD
 
 ## --- Deploying an Environment ---
 

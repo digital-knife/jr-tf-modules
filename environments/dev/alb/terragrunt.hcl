@@ -26,7 +26,7 @@ dependency "alb_sg" {
 }
 
 inputs = {
-  name               = "dev-web-alb"
+  name               = "web-alb"
   environment        = "dev"
   load_balancer_type = "application"
   vpc_id             = dependency.vpc.outputs.vpc_id

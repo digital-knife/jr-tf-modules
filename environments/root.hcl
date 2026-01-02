@@ -4,7 +4,7 @@ locals {
   
   #Deployer and destination account IDs
   hub_account_id         = "756148349252" # automation-hub account ONLY BUILD FROM HERE!!!!!
-  destination_account_id = "INSERT_TEST_AUTO_ID_HERE" 
+  destination_account_id = "315735600075" 
 }
 
 #Store state in the Automation account
@@ -20,10 +20,6 @@ remote_state {
     region         = "us-east-1"
     encrypt        = true
     dynamodb_table = "terraform-lock-table"
-    
-    # IMPORTANT: Use this to ensure Terragrunt uses Hub credentials for S3
-    # even while the provider is assuming the Spoke role.
-    s3_bucket_query_logging_enabled = true
   }
 }
 
