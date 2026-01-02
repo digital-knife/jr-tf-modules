@@ -49,7 +49,7 @@ resource "aws_iam_instance_profile" "this" {
 
 # 3. The EC2 Instance
 resource "aws_instance" "this" {
-  ami                         = data.aws_ami.amazon_linux_2023.id
+  ami                         = var.ami != null ? var.ami : data.aws_ami.amazon_linux_2023.id
   user_data                   = file("${path.module}/scripts/install_nginx.sh")
   user_data_replace_on_change = true
   instance_type               = var.instance_type
@@ -71,7 +71,7 @@ resource "aws_instance" "this" {
   }
 
   tags = {
-    Name        = "${var.environment}-${var.name}"
+    Name        = "${var.name}"
     Environment = var.environment
     ManagedBy   = "Terraform"
   }
