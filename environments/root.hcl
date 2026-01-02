@@ -2,8 +2,8 @@ locals {
   # Automatically load global variables
   global_vars = yamldecode(file("${get_parent_terragrunt_dir()}/_global/common_vars.yaml"))
   
-  # IDs for clarity
-  hub_account_id         = "756148349252" # automation-hub account ONLY BUILD FROM HERE
+  #Deployer and destination account IDs
+  hub_account_id         = "756148349252" # automation-hub account ONLY BUILD FROM HERE!!!!!
   destination_account_id = "INSERT_TEST_AUTO_ID_HERE" 
 }
 
