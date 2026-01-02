@@ -4,12 +4,24 @@ variable "vpc_cidr" {
 }
 
 variable "environment" {
-  description = "The environment for the VPC (e.g., dev, prod)."
+  description = "The environment name (used for resource naming and tagging)."
   type        = string
 }
 
 variable "az_count" {
-  description = "The number of availability zones to use."
+  description = "Number of AZs to distribute subnets across."
   type        = number
   default     = 2
+}
+
+variable "enable_nat_gateway" {
+  description = "Toggle to create NAT Gateways and associated EIPs. Set to false to save costs."
+  type        = bool
+  default     = false
+}
+
+variable "single_nat_gateway" {
+  description = "If true, will create one NAT Gateway shared by all private subnets."
+  type        = bool
+  default     = false
 }
