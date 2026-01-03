@@ -29,3 +29,8 @@ variable "ami" {
   description = "The AMI ID to use for the EC2 instance"
   default     = null
 }
+
+variable "target_group_arn" {
+  type        = string
+  description = "The ARN of the ALB target group to attach the instance to"
+}

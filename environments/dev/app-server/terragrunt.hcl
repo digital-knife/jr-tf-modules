@@ -26,11 +26,13 @@ terraform {
 }
 
 inputs = {
-  name          = "app-server"
+  name          = "app-server-private"
   instance_type = "t3.micro"
   vpc_id        = dependency.vpc.outputs.vpc_id
-  subnet_id          = dependency.vpc.outputs.public_subnet_ids[0]
+  subnet_id          = dependency.vpc.outputs.private_subnet_ids[0] 
   security_group_ids = [dependency.sg.outputs.security_group_id]
-  instance_type      = "t3.micro"
   environment        = "dev"
+  
+  # App servers doesn't need a public IP
+  associate_public_ip_address = false 
 }
