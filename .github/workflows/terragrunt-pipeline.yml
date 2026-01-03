@@ -43,4 +43,4 @@ jobs:
             COMMAND="run-all plan --terragrunt-non-interactive"
           fi
 
-          terragrunt $COMMAND
+          terragrunt $COMMAND --terragrunt-working-dir environments
