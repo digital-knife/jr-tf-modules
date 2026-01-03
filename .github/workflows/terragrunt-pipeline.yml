@@ -40,3 +40,17 @@ jobs:
         run: |
           cd environments/automation/iam-oidc
           terragrunt plan --terragrunt-non-interactive
+
+      - name: Plan Dev VPC
+        env:
+          TERRAGRUNT_TFPATH: terraform
+        run: |
+          cd environments/dev/vpc
+          terragrunt plan --terragrunt-non-interactive
+
+      - name: Plan Dev S3
+        env:
+          TERRAGRUNT_TFPATH: terraform
+        run: |
+          cd environments/dev/s3
+          terragrunt plan --terragrunt-non-interactive
