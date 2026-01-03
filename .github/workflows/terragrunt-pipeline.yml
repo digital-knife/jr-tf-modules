@@ -43,6 +43,5 @@ jobs:
             COMMAND="run-all plan --terragrunt-non-interactive"
           fi
 
-          # Run-all from the environments root to catch EVERYTHING
           cd environments
-          terragrunt $COMMAND
+          terragrunt $COMMAND --terragrunt-exclude-dir "_global"
