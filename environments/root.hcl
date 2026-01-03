@@ -1,10 +1,15 @@
 locals {
-  # Automatically load global variables
   global_vars = yamldecode(file("${get_parent_terragrunt_dir()}/_global/common_vars.yaml"))
   
-  #Deployer and destination account IDs
-  hub_account_id         = "756148349252" # automation-hub account ONLY BUILD FROM HERE!!!!!
+  hub_account_id         = "756148349252" 
   destination_account_id = "315735600075" 
+
+  #Determine if we are deploying a Hub resource or a Spoke resource
+  #We check if the folder path contains 'automation'
+  is_automation_resource = contains(split("/", path_relative_to_include()), "automation")
+  
+  # Set the target account ID based on the folder location
+  target_account_id = local.is_automation_resource ? local.hub_account_id : local.destination_account_id
 }
 
 #Store state in the Automation account
@@ -23,7 +28,6 @@ remote_state {
   }
 }
 
-#Build in the Destination account
 generate "provider" {
   path      = "provider.tf"
   if_exists = "overwrite_terragrunt"
@@ -31,22 +35,32 @@ generate "provider" {
 provider "aws" {
   region = "us-east-1"
   
-  # Only allow building in the Spoke account
-  allowed_account_ids = ["${local.destination_account_id}"]
+  # Dynamically allow building in either Hub or Spoke
+  allowed_account_ids = ["${local.target_account_id}"]
 
-  # Reach out from the Hub and assume this role in the Spoke
+  # ONLY assume a role if we are NOT in an automation folder
+  %{ if !local.is_automation_resource }
   assume_role {
     role_arn = "arn:aws:iam::${local.destination_account_id}:role/TerragruntRole"
   }
+  %{ endif }
 
   default_tags {
     tags = {
       ManagedBy   = "Terragrunt"
       Environment = "${path_relative_to_include()}"
       Project     = "${local.global_vars.project_name}"
-      Owner       = "${local.global_vars.owner}"
     }
   }
 }
 EOF
+}
+inputs = {
+  # We extract the environment name from the folder path (e.g., "dev" or "automation")
+  environment = local.is_automation_resource ? "automation" : split("/", path_relative_to_include())[1]
+  
+  # Pass global vars so modules can use Project/Owner tags
+  project_name = local.global_vars.project_name
+  owner        = local.global_vars.owner
+  github_repo  = "digital-knife/jr-tf-modules"
 }
