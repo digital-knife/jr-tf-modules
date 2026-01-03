@@ -1,4 +1,4 @@
-name: "Terragrunt Pipeline"
+name: "Terragrunt Multi-Account Pipeline"
 
 on:
   push:
@@ -11,7 +11,7 @@ permissions:
   contents: read
 
 jobs:
-  terragrunt-plan:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -20,10 +20,9 @@ jobs:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          # Use the secret we created in the GitHub UI
           role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
           aws-region: us-east-1
-      
+
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
@@ -33,24 +32,17 @@ jobs:
         uses: autero1/action-terragrunt@v3
         with:
           terragrunt-version: 0.54.0
-      
-      - name: Plan Hub OIDC
-        env:
-          TERRAGRUNT_TFPATH: terraform
-        run: |
-          cd environments/automation/iam-oidc
-          terragrunt plan --terragrunt-non-interactive
 
-      - name: Plan Dev VPC
+      - name: Terragrunt Hub & Dev Sync
         env:
           TERRAGRUNT_TFPATH: terraform
         run: |
-          cd environments/dev/vpc
-          terragrunt plan --terragrunt-non-interactive
+          if [[ "${{ github.event_name }}" == "push" && "${{ github.ref }}" == "refs/heads/main" ]]; then
+            COMMAND="run-all apply --terragrunt-non-interactive --terragrunt-auto-approve"
+          else
+            COMMAND="run-all plan --terragrunt-non-interactive"
+          fi
 
-      - name: Plan Dev S3
-        env:
-          TERRAGRUNT_TFPATH: terraform
-        run: |
-          cd environments/dev/s3
-          terragrunt plan --terragrunt-non-interactive
+          # Run-all from the environments root to catch EVERYTHING
+          cd environments
+          terragrunt $COMMAND
