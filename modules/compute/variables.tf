@@ -33,4 +33,5 @@ variable "ami" {
 variable "target_group_arn" {
   type        = string
   description = "The ARN of the ALB target group to attach the instance to"
+  default     = ""
 }

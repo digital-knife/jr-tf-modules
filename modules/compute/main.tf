@@ -16,6 +16,7 @@ data "aws_ami" "amazon_linux_2023" {
 
 #Attach EC2 Instance to ALB Target Group
 resource "aws_lb_target_group_attachment" "this" {
+  count            = var.target_group_arn != "" ? 1 : 0
   target_group_arn = var.target_group_arn
   target_id        = aws_instance.this.id
   port             = 80
