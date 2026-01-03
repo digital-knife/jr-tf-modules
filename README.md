@@ -1,7 +1,8 @@
 # AWS Infrastructure Modules
 
 Reusable **Terraform** modules and **Terragrunt** orchestrations for secure, production-grade AWS infrastructure. 
-Built with best practices: input validation, automated tagging, remote state locking, and modular design.
+Built with best practices: input validation, automated tagging, remote state locking, modular design, and 
+decoupled state architecture for minimized blast radius and high concurrency.
 
 ## Orchestration & Structure
 
@@ -12,35 +13,36 @@ Built with best practices: input validation, automated tagging, remote state loc
 ## Current Modules
 
 **Core Infrastructure**
-- **S3 Secure Bucket**: High-security storage with versioning, encryption, and full 
-  public access blocking. Implements strict naming validation and lifecycle 
-  rules for production-grade data safety.
 
 - **VPC**: Multi-AZ network architecture featuring public and private subnet 
   segmentation. Includes integrated NAT Gateways and Flow Logs for secure, 
   audited traffic management.
 
-- **DynamoDB**: Scalable NoSQL tables featuring enterprise encryption and 
-  high availability. Configured specifically for application data and 
-  secure Terraform state locking.
-
-- **EC2 Compute**: Hardened baseline instances featuring custom AMIs and 
-  automated user-data scripts for software provisioning. Includes SSM 
-  integration for secure, passwordless session management.
+- **EC2 Compute**: Standardized Linux baselines featuring automated Nginx provisioning
+  via user_data scripts. Integrated with AWS Systems Manager (SSM) for secure, terminal-based 
+  management without the need for open SSH ports.
 
 - **Application Load Balancer**: High-availability traffic distribution across 
-  multiple availability zones with integrated health checks. Manages SSL 
-  termination and intelligent routing to back-end target groups.
+  multiple AZs with integrated health checks. Manages SSL termination and 
+  intelligent routing to back-end target groups.
 
-- **CI/CD via GitHub Actions & GitOps**: Automated deployment pipeline utilizing OIDC 
-  for secure, keyless authentication to AWS. Implements automated 'terragrunt run-all plan' 
-  on pull requests and 'apply' on merges to the main branch, ensuring an immutable audit 
-  trail for all infrastructure changes.
+- **CI/CD via GitHub Actions & GitOps**: Fully automated "Plan-on-PR" and "Apply-on-Merge" 
+  pipeline. Uses OIDC for keyless AWS authentication, providing a secure, immutable 
+  audit trail for every infrastructure change.
+
+- **Tiered Security Groups (The Handshake)**: Industry-standard Security Group Chaining. The ALB is 
+  the only component open to the internet; Compute instances are hardened to accept traffic only 
+  from the ALB Security Group ID, eliminating IP-based lateral movement risks.
+
+- **S3 & DynamoDB (Backend)**: Production-grade remote state management with automated state 
+  locking via DynamoDB and AES-256 encryption on S3 to prevent state corruption and data leaks.
+
+- **Decoupled State Architecture**: Utilizing a "State-per-Service" model where every 
+  infrastructure component (VPC, ALB, Compute, etc.) maintains its own independent Terraform state file.
 
 ## Coming Soon
-- **IAM Governance**: Centralized identity management featuring scoped 
-  execution roles and least-privilege policies. Implements OIDC providers 
-  to enable secure authentication for GitHub Actions.
+- **IAM Governance**: Refined IAM roles using scoped execution policies
+  to further harden the interaction between AWS services.
 
 - **CloudWatch & Monitoring**: Centralized operational dashboards featuring 
   real-time metric filters and automated SNS alarms. Provides full 
