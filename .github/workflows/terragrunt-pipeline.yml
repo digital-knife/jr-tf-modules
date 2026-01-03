@@ -38,7 +38,7 @@ jobs:
           TERRAGRUNT_TFPATH: terraform
         run: |
           if [[ "${{ github.event_name }}" == "push" && "${{ github.ref }}" == "refs/heads/main" ]]; then
-            COMMAND="run-all apply --terragrunt-non-interactive --terragrunt-auto-approve"
+            COMMAND="run-all apply --terragrunt-non-interactive --auto-approve"
           else
             COMMAND="run-all plan --terragrunt-non-interactive"
           fi
