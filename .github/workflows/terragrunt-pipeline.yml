@@ -23,6 +23,11 @@ jobs:
           # Use the secret we created in the GitHub UI
           role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
           aws-region: us-east-1
+      
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_wrapper: false
 
       - name: Setup Terragrunt
         uses: autero1/action-terragrunt@v3
