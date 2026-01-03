@@ -13,7 +13,7 @@ dependency "vpc" {
 }
 
 terraform {
-  source = "../../../modules/security-group" # Update this to your SG module path
+  source = "../../../modules/security-group" 
 }
 
 inputs = {

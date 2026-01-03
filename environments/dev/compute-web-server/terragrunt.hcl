@@ -12,7 +12,7 @@ dependency "vpc" {
 }
 
 dependency "sg" {
-  config_path = "../security-group"
+  config_path = "../security-group-compute"
   mock_outputs = {
     security_group_id = "sg-mock-id-for-compute"
   }
