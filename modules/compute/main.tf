@@ -14,48 +14,46 @@ data "aws_ami" "amazon_linux_2023" {
   }
 }
 
-#Attach EC2 Instance to ALB Target Group
-resource "aws_lb_target_group_attachment" "this" {
-  count            = var.target_group_arn != "" ? 1 : 0
-  target_group_arn = var.target_group_arn
-  target_id        = aws_instance.this.id
-  port             = 80
-}
-
-# 2. IAM Role for SSM Access
+#Unified Identity (SSM + CloudWatch)
 resource "aws_iam_role" "this" {
-  name = "${var.environment}-${var.name}-ssm-role"
+
+  name = "${var.environment}-${var.name}-unified-role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [{
-      Action = "sts:AssumeRole"
-      Effect = "Allow"
-      Principal = {
-        Service = "ec2.amazonaws.com"
-      }
+      Action    = "sts:AssumeRole"
+      Effect    = "Allow"
+      Principal = { Service = "ec2.amazonaws.com" }
     }]
   })
 
-  tags = {
-    Name        = "${var.environment}-${var.name}-ssm-role"
+  tags = merge(var.tags, {
+    Name        = "${var.environment}-${var.name}-role"
     Environment = var.environment
-  }
+  })
 }
 
-# Attach the standard SSM policy to the role
-resource "aws_iam_role_policy_attachment" "ssm_managed" {
+# Attachment A: SSM Access (for Session Manager terminal)
+resource "aws_iam_role_policy_attachment" "ssm" {
   role       = aws_iam_role.this.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
 }
 
-# The Instance Profile (The "bridge" between the Role and the EC2 Instance)
+# Attachment B: CloudWatch Agent (for Logs and Metrics)
+resource "aws_iam_role_policy_attachment" "cloudwatch" {
+  role       = aws_iam_role.this.name
+  policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
+}
+
+# The Instance Profile
 resource "aws_iam_instance_profile" "this" {
   name = "${var.environment}-${var.name}-instance-profile"
   role = aws_iam_role.this.name
 }
 
-# 3. The EC2 Instance
+# 3. COMPUTE: The EC2 Instance
+
 resource "aws_instance" "this" {
   ami                         = var.ami != null ? var.ami : data.aws_ami.amazon_linux_2023.id
   user_data                   = file("${path.module}/scripts/install_nginx.sh")
@@ -65,7 +63,7 @@ resource "aws_instance" "this" {
   vpc_security_group_ids      = var.security_group_ids
   iam_instance_profile        = aws_iam_instance_profile.this.name
 
-  # Security Best Practice: Enforce IMDSv2 (prevents credential theft)
+  # Security Best Practice: IMDSv2
   metadata_options {
     http_endpoint               = "enabled"
     http_tokens                 = "required"
@@ -78,9 +76,17 @@ resource "aws_instance" "this" {
     encrypted   = true
   }
 
-  tags = {
-    Name        = "${var.name}"
+  tags = merge(var.tags, {
+    Name        = var.name
     Environment = var.environment
     ManagedBy   = "Terraform"
-  }
+  })
+}
+
+# 4. NETWORKING: ALB Target Group Attachment
+resource "aws_lb_target_group_attachment" "this" {
+  count            = var.target_group_arn != "" ? 1 : 0
+  target_group_arn = var.target_group_arn
+  target_id        = aws_instance.this.id
+  port             = 80
 }

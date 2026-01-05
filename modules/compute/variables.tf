@@ -35,3 +35,9 @@ variable "target_group_arn" {
   description = "The ARN of the ALB target group to attach the instance to"
   default     = ""
 }
+
+variable "tags" {
+  type        = map(string)
+  description = "A map of tags to assign to the resources"
+  default     = {}
+}
