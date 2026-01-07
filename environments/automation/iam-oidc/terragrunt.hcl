@@ -3,7 +3,7 @@ include "root" {
 }
 
 terraform {
-  source = "../../..//modules/iam-oidc"
+  source = "../../../modules//iam-oidc"
 }
 
 inputs = {
