@@ -3,7 +3,7 @@ include "root" {
 }
 
 terraform {
-  source = "../../../modules/oam-link"
+  source = "${get_repo_root()}//modules/monitoring-link"
 }
 
 dependency "monitoring_sink" {

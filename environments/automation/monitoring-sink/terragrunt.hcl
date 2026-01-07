@@ -3,7 +3,7 @@ include "root" {
 }
 
 terraform {
-  source = "../../../modules//monitoring-sink"
+  source = "${get_repo_root()}//modules/monitoring-sink"
 }
 
 locals {
