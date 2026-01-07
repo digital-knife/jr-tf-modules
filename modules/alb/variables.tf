@@ -35,6 +35,7 @@ variable "target_group_protocol" {
   default = "HTTP"
 }
 
+
 # --- Health Check Settings ---
 
 variable "health_check_path" {
