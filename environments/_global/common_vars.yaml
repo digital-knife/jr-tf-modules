@@ -1,3 +1,11 @@
+# Project Metadata
 project_name: "JR-Infrastructure"
 owner:        "JR"
 contact:      "jermainerakoczy1@gmail.com"
+
+# --- Cross-Account ID Map ---
+dev_account_id:        "315735600075" 
+automation_account_id: "756148349252"
+
+# Optional: You can also define your default region here to keep things DRY
+aws_region: "us-east-1"

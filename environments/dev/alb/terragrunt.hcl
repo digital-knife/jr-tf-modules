@@ -29,7 +29,7 @@ inputs = {
   name               = "web-alb"
   environment        = "dev"
   load_balancer_type = "application"
-  vpc_id             = dependency.vpc.outputs.vpc_id
+  vpc_id = try(dependency.vpc.outputs.vpc_id, "vpc-dummy-id")
   
   # Aligned to your module's variables.tf
   public_subnet_ids  = dependency.vpc.outputs.public_subnet_ids

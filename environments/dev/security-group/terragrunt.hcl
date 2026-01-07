@@ -10,6 +10,7 @@ dependency "vpc" {
     private_subnet_ids = ["subnet-789", "subnet-012"]
   }
   mock_outputs_allowed_terraform_commands = ["plan", "validate"]
+  skip_outputs = get_terraform_command() == "destroy" ? true : false
 }
 
 terraform {
@@ -17,7 +18,7 @@ terraform {
 }
 
 inputs = {
-  vpc_id      = dependency.vpc.outputs.vpc_id
+  vpc_id = try(dependency.vpc.outputs.vpc_id, try(dependency.vpc.mock_outputs.vpc_id, "vpc-dummy-id"))
   environment = "dev"
   name        = "dev-bastion-sg"
 }
