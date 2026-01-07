@@ -3,7 +3,7 @@ include "root" {
 }
 
 terraform {
-  source = "${get_repo_root()}//modules/monitoring-link"
+  source = "../../../modules//monitoring-link"
 }
 
 dependency "monitoring_sink" {
@@ -12,11 +12,10 @@ dependency "monitoring_sink" {
   mock_outputs = {
     sink_arn = "arn:aws:oam:us-east-1:123456789012:sink/mock-id"
   }
-  mock_outputs_allowed_terraform_commands = ["validate", "plan"]
 }
 
 inputs = {
-  sink_arn = try(dependency.monitoring_sink.outputs.sink_arn, "arn:aws:oam:us-east-1:123456789012:sink/dummy")
+  sink_arn       = try(dependency.monitoring_sink.outputs.sink_arn, "arn:aws:oam:us-east-1:123456789012:sink/dummy")
   label_template = "$AccountName"
   resource_types = ["AWS::CloudWatch::Metric", "AWS::Logs::LogGroup"]
 }
