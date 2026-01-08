@@ -6,10 +6,6 @@ terraform {
   source = "../../../modules//cloudwatch-dashboard"
 }
 
-# Dependencies remain for ordering
-dependency "web_server" { config_path = "../../dev/compute-web-server" }
-dependency "app_server" { config_path = "../../dev/compute-app-server" }
-
 inputs = {
   dashboard_name = "GLOBAL-OPERATIONS-CENTER"
   
